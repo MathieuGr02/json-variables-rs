@@ -35,6 +35,7 @@ impl<'de> Deserialize<'de> for Variables {
     }
 }
 
+// Manual implementation to only parse variables on serialization
 impl Serialize for Variables {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
@@ -100,7 +101,7 @@ where
 }
 
 pub fn default_pattern() -> Regex {
-    // Matches the pattern ${<variable(.variable>)} where (.variable) is a possible "infinite"
+    // Matches the pattern ${<variable(.variable>)} where (.variable) is a possible "depth"
     // accessing of variables inside a map
     Regex::new(r"\$\{([a-zA-Z0-9_.]+)\}").unwrap()
 }
@@ -149,7 +150,7 @@ impl Variables {
             if value.is_array() {
                 let mut map = Map::new();
                 for (key, value) in value.as_array().unwrap().iter().enumerate() {
-                    map.insert(format!("{}", key), value.to_owned());
+                    map.insert(key.to_string(), value.to_owned());
                 }
                 Self::insert_variables(id, map, tree);
             }
@@ -175,7 +176,7 @@ impl Variables {
                 // Replace all "pattern(<variable>)" references
                 let pattern_variable_quote = format!("\"{pattern_variable}\"");
                 while config.contains(&pattern_variable_quote) {
-                    config = config.replace(&pattern_variable_quote, &format!("{}", value));
+                    config = config.replace(&pattern_variable_quote, &value.to_string());
                 }
 
                 let mut value_string = value.to_string();
@@ -191,7 +192,7 @@ impl Variables {
                 }
             }
             else {
-                panic!("Variable {} called but neved defined", variable);
+                panic!("Variable {variable} called but neved defined");
             }
         }
 
