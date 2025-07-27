@@ -2,7 +2,7 @@
 //!
 //! Variable system in json using serde json. Instead of repeating multiple definitions in your
 //! JSON and bloating the file, define variables to easily reuse objects across your JSON file.
-//! This type of system is especially usefull for config based systems where large configurations
+//! This type of system is especially useful for config based systems where large configurations
 //! in JSON are needed to define objects and behaviour in a system.
 //!
 //! A JSON like this
@@ -12,15 +12,15 @@
 //!     {
 //!         "name": "Franklin",
 //!         "country": {
-//!             "name": "Netherlands",
-//!             "abbreviation": "NL"
+//!             "long": "Netherlands",
+//!             "short": "NL"
 //!         }
 //!     },
 //!     {
-//!         "name" "John",
+//!         "long" "John",
 //!         "country": {
-//!             "name": "Netherlands",
-//!             "abbreviation": "NL"
+//!             "long": "Netherlands",
+//!             "short": "NL"
 //!         }
 //!     }
 //! ]
@@ -32,8 +32,8 @@
 //! {
 //!     "variables": {
 //!         "NL": {
-//!             "name": "Netherlands",
-//!             "abbreviation": "NL"
+//!             "long": "Netherlands",
+//!             "short": "NL"
 //!         }
 //!     },
 //!     "data": 
@@ -43,14 +43,14 @@
 //!             "country": "${NL}"
 //!         },
 //!         {
-//!             "name" "John",
+//!             "name": "John",
 //!             "country": "${NL}"
 //!         }
 //!     ]
 //! }
 //! ```
 //!
-//! Variables can also be defined inside ones own programm without defining it in the JSON. This is
+//! Variables can also be defined inside ones own program without defining it in the JSON. This is
 //! done through the use of the serde_json `json!` macro or via a [`String`].
 //!
 //! ```
@@ -63,7 +63,7 @@
 //!             "country": "${NL}"
 //!         },
 //!         {
-//!             "name" "John",
+//!             "name": "John",
 //!             "country": "${NL}"
 //!         }
 //!     ]"#;
@@ -71,8 +71,8 @@
 //! let variables = json!(
 //!     {
 //!         "NL": {
-//!             "name": "Netherlands",
-//!             "abbreviation": "NL"
+//!             "long": "Netherlands",
+//!             "short": "NL"
 //!         }
 //!     }
 //! );
@@ -88,7 +88,7 @@
 //!             "country": "${NL}"
 //!         },
 //!         {
-//!             "name" "John",
+//!             "name": "John",
 //!             "country": "${NL}"
 //!         }
 //!     ]"#;
@@ -96,8 +96,8 @@
 //! let variables = r#"
 //!     { 
 //!         "NL": { 
-//!             "name": "Netherlands", 
-//!             "abbreviation": "NL" 
+//!             "long": "Netherlands", 
+//!             "short": "NL" 
 //!         } 
 //!     }
 //! "#;
@@ -106,15 +106,15 @@
 //! let result = variables.replace(data); 
 //! ```
 //!
-//! By default the matching pattern is ${\<variable\>}. This pattern also allows for value
+//! By default, the matching pattern is ${\<variable\>}. This pattern also allows for value
 //! accessing or array indexing through the `.` accessor.
 //!
 //! ```json
 //! {
 //!     "variables": {
 //!         "NL": {
-//!             "name": "Netherlands",
-//!             "abbreviation": "NL"
+//!             "long": "Netherlands",
+//!             "short": "NL"
 //!         }
 //!     },
 //!     "data": 
@@ -122,12 +122,12 @@
 //!         {
 //!             "name": "Franklin",
 //!             "country": {
-//!                 "name": "${NL.name}",
-//!                 "abbreviation": "${NL.abbreviation}"
+//!                 "long": "${NL.long}",
+//!                 "short": "${NL.short}"
 //!             }
 //!         },
 //!         {
-//!             "name" "John",
+//!             "name": "John",
 //!             "country": "${NL}"
 //!         }
 //!     ]
@@ -143,5 +143,4 @@ pub use variables::*;
 pub mod error;
 pub use error::*;
 
-pub mod traits;
-pub use traits::*;
+pub use derive_json_variables::*;

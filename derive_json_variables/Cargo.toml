@@ -12,5 +12,9 @@ proc-macro = true
 
 [dependencies]
 syn = { version = "2", features = ["full", "parsing"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
 
-json_variables = { path = "../json_variables" }
+quote = "1.0.40"
+
+darling = "0.21.0"

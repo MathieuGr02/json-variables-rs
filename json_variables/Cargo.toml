@@ -11,5 +11,7 @@ regex = "1"
 
 thiserror = "2.0.12"
 
+derive_json_variables = { path = "../derive_json_variables" }
+
 [dev-dependencies]
 rstest = "0.25.0"

@@ -1,3 +1,4 @@
+use std::os::unix::process::parent_id;
 use regex::Regex;
 use serde::{de::Error, ser::SerializeMap, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{Map, Value};
@@ -12,6 +13,12 @@ pub struct Variables {
     pub variables: Map<String, Value>,
     pub pattern: Regex,
     tree: VariableTree
+}
+
+impl Default for Variables {
+    fn default() -> Self {
+        Variables { variables: Map::default(), pattern: default_pattern(), tree: VariableTree::default() }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -157,14 +164,14 @@ impl Variables {
         }
     }
 
-    /// Replace mentions of variables of the pattern ${<variable>} with their true value as given
+    /// Replace mentions of variables of the pattern(<variable>) with their true value as given
     /// in the variable tree
     pub fn replace(&self, config: impl Into<String>) -> String {
         let mut config = config.into();
         // Get all pattern matches
         let mut variables = Vec::<(String, String)>::new();
         for variable in self.pattern.captures_iter(&config) {
-            // Index corresponds to the <variable> inside the pattern ${<variable>}
+            // Index corresponds to the <variable> inside the pattern(<variable>)
             variables.push((variable[0].to_string(), variable[1].to_string()));
         }
 
@@ -192,7 +199,7 @@ impl Variables {
                 }
             }
             else {
-                panic!("Variable {variable} called but neved defined");
+                panic!("Variable {variable} called but never defined");
             }
         }
 

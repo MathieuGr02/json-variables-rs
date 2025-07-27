@@ -1,4 +1,4 @@
-name: Rust
+name: Build
 
 on:
   push:
@@ -16,7 +16,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose
+    - name: Build Core
+      run: |
+        cd json_variables
+        cargo build --verbose
+
+    - name: Build derive
+      run: |
+        cd json_variables_derive
+        cargo build --verbose
+
     - name: Run tests
       run: cargo test --verbose
