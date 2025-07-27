@@ -23,7 +23,7 @@ jobs:
 
     - name: Build derive
       run: |
-        cd json_variables_derive
+        cd derive_json_variables
         cargo build --verbose
 
     - name: Run tests
